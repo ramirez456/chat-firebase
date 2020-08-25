@@ -2,14 +2,25 @@
   <div class="text-center">
     <v-btn v-if="!user" color="primary" @click="loginUser">Login con Google</v-btn>
     <ul>
-      <li v-for="(message, i) in messageList" :key="i">
-        <img  style="width: 40px" :src="message.avatar" alt="">
+      <li v-for="(message, i) in reverseMessageList" :key="i"
+        :class="{'right': message.user == user.name}"
+      >
+         <v-chip
+            pill
+            :color="message.user == user.name ? 'primary' : ''"
+          >
+          <v-avatar left>
+            <v-img :src="message.avatar"></v-img>
+          </v-avatar>
+          {{ message.text }}
+        </v-chip>
+        <!-- <img  style="width: 40px" :src="message.avatar" alt="">
         <strong>
           {{ message.user }}
         </strong>
         <p>
           {{ message.text }}
-        </p>
+        </p> -->
       </li>
     </ul>
     <v-text-field
@@ -43,7 +54,7 @@ export default {
         .on('value', (res) => {
           this.messageList = []
           res.forEach((doc) => {
-            this.messageList.push(doc.val())
+            this.messageList.unshift(doc.val())
           })
         })
     },
@@ -53,7 +64,7 @@ export default {
         user: this.user.name,
         avatar: this.user.avatar
       }
-      database.ref('/messages/'+this.ID())
+      database.ref('/messages/'+this.messageList.length)
         .set(msg)
       this.messageText = ''
     },
@@ -62,18 +73,27 @@ export default {
     }
   },
   computed: {
-    ...mapState(['user'])
+    ...mapState(['user']),
+    reverseMessageList () {
+      return this.messageList
+    }
   }
 }
 </script>
 
 <style lang="sass">
 ul
+  padding: 0 !important
+  margin: 0 !important
   li
     list-style: none
     display: flex
     flex-direction: column
     align-items: flex-start
-    border-top: 1px solid gray
-    padding-top: 10px
+    padding-top: 15px
+    padding-bottom: 15px
+    &.right
+      display: flex !important
+      span
+        align-self: flex-end !important
 </style>
