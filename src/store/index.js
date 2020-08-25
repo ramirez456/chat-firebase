@@ -18,7 +18,7 @@ export default new Vuex.Store({
   actions: {
     loginUser({commit}) {
       let provider = new firebase.auth.GoogleAuthProvider();
-      
+
       auth.signInWithPopup(provider).then(response => {
         console.log(response);
 
@@ -30,14 +30,14 @@ export default new Vuex.Store({
         }
 
         commit('setUser', user);
-        
+
       }).catch(error => {
         console.log('ha ocurrido un error al autenficar', error);
       });
     },
     logout({commit}) {
       auth.signOut().then(function() {
-        console.log('logout');
+        commit('setUser', null);
       }).catch(function(error) {
         console.log(error);
       });
