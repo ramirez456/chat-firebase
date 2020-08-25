@@ -75,7 +75,7 @@ export default {
   computed: {
     ...mapState(['user']),
     reverseMessageList () {
-      return this.messageList
+      return this.messageList.reverse()
     }
   }
 }
